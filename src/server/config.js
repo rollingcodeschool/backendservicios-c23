@@ -3,6 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import '../database/db.js'
 
 export default class Server {
   // el objetivo del constructor es definir las propiedad del futuro objeto

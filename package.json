@@ -1,0 +1,20 @@
+{
+  "name": "18-backend-crud-servicios",
+  "version": "1.0.0",
+  "description": "Backend del proyecto crud de servicios de programación",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "dev": "node --watch index"
+  },
+  "keywords": [
+    "middlewares",
+    "documentos",
+    "modelos",
+    "endpoint"
+  ],
+  "author": "Arias Emilse",
+  "license": "ISC",
+  "packageManager": "pnpm@11.5.2",
+  "type": "module"
+}

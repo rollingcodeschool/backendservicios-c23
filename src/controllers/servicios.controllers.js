@@ -3,5 +3,13 @@ export const prueba = (req, res) => {
 }
 
 export const crearServicio = (req, res) => {
-  res.json("hasta luego");
+  try{
+    //console.log(req.body)
+    res.json("hasta luego");
+
+  }catch(error){
+    console.error(error)
+    res.status(500).json({mensaje: 'Ocurrio un error al crear el servicio'})
+  }
+  
 }

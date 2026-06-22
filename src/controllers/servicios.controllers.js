@@ -65,3 +65,20 @@ export const borrarServicioPorID = async (req, res) => {
       .json({ mensaje: "Ocurrio un error al intentar borrar un servicio por id" });
   }
 };
+export const editarServicioPorID = async (req, res) => {
+  try {
+    //deberia validar que el id exista y sea un id de mongodb
+    const servicioActualizado = await Servicio.findByIdAndUpdate(req.params.id, req.body, {new:true})
+    if (!servicioActualizado) {
+      return res
+        .status(404)
+        .json({ mensaje: "No se encontro un servicio con el id enviado" });
+    }
+    res.status(200).json({mensaje: 'El servicio fue editado correctamente', servicio: servicioActualizado});
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ mensaje: "Ocurrio un error al intentar editar un servicio por id" });
+  }
+};

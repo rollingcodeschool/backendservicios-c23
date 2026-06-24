@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { borrarServicioPorID, crearServicio, editarServicioPorID, listarServicios, obtenerServicioPorID, prueba } from "../controllers/servicios.controllers.js";
-import validacionServicio from "../middlewares/validacionServicio.js";
+import {validacionIDServicio, validacionServicio} from "../middlewares/validacionServicio.js";
 
 const router = Router()
 //http://localhost:3000/api/servicios/dfgdfgdf
@@ -11,5 +11,5 @@ const router = Router()
 
 router.route('/test').get(prueba)
 router.route('/').post( validacionServicio,crearServicio).get(listarServicios)
-router.route('/:id').get(obtenerServicioPorID).delete(borrarServicioPorID).put(editarServicioPorID).patch(editarServicioPorID)
+router.route('/:id').get(validacionIDServicio,obtenerServicioPorID).delete(validacionIDServicio,borrarServicioPorID).put([validacionIDServicio, validacionServicio], editarServicioPorID).patch(editarServicioPorID)
 export default router

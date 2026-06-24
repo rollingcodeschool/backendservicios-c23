@@ -1,7 +1,7 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import resultadoValidacion from "./resultadoValidacion.js";
 
-const validacionServicio = [
+export const validacionServicio = [
   body("nombreServicio")
     .notEmpty()
     .withMessage("El nombre del servicio es un dato obligatorio")
@@ -45,4 +45,11 @@ const validacionServicio = [
   resultadoValidacion,
 ];
 
-export default validacionServicio;
+export const validacionIDServicio = [
+  param("id")
+    .isMongoId()
+    .withMessage(
+      "El id no corresponde con el formato correcto del id de mongoDB",
+    ),
+  resultadoValidacion,
+];

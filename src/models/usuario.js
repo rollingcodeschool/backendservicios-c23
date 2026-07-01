@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import bcrypt from "bcryptjs";
 
 const UsuarioSchema = new Schema(
   {
@@ -15,7 +16,9 @@ const UsuarioSchema = new Schema(
       unique: true,
       validate: {
         validator: (valor) => {
-          /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(valor);
+          /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(
+            valor,
+          );
         },
       },
     },
@@ -24,7 +27,7 @@ const UsuarioSchema = new Schema(
       required: true,
       validate: {
         validator: (valor) => {
-         /^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{8,50}$/.test(
+          /^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{8,50}$/.test(
             valor,
           );
         },
@@ -34,13 +37,28 @@ const UsuarioSchema = new Schema(
       type: String,
       required: true,
       enum: ["Admin", "Cliente"],
-      default:'Cliente'
+      default: "Cliente",
     },
   },
   {
     timestamps: true,
   },
 );
+
+//creamos el hash antes de guardar en la bd
+UsuarioSchema.pre("save", async function () {
+  const usuario = this;
+  //preguntar si el password no fue modificado
+  if (!usuario.isModified("password")) return;
+  //aqui hasheamos el password
+  try {
+    const salt = await bcrypt.genSalt(10)
+    usuario.password = await bcrypt.hash(usuario.password, salt)
+  } catch (error) {
+    console.error(error);
+    throw error
+  }
+});
 
 const Usuario = mongoose.model("usuario", UsuarioSchema);
 

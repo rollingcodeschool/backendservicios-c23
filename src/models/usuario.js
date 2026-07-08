@@ -39,6 +39,16 @@ const UsuarioSchema = new Schema(
       enum: ["Admin", "Cliente"],
       default: "Cliente",
     },
+    verificado: {
+      type: Boolean,
+      default: false,
+    },
+    codigoVerificacion:{
+      type: String
+    },
+    fechaExpiracionCodigo:{
+      type: Date
+    }
   },
   {
     timestamps: true,
@@ -52,11 +62,11 @@ UsuarioSchema.pre("save", async function () {
   if (!usuario.isModified("password")) return;
   //aqui hasheamos el password
   try {
-    const salt = await bcrypt.genSalt(10)
-    usuario.password = await bcrypt.hash(usuario.password, salt)
+    const salt = await bcrypt.genSalt(10);
+    usuario.password = await bcrypt.hash(usuario.password, salt);
   } catch (error) {
     console.error(error);
-    throw error
+    throw error;
   }
 });
 

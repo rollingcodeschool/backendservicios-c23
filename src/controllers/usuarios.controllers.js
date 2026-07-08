@@ -26,3 +26,21 @@ export const listarUsuarios = async (req, res) => {
       .json({ mensaje: "Ocurrio un error al listar los usuarios" });
   }
 };
+
+export const registrarUsuario = async(req, res) =>{
+  try{
+    //1- recibir el req
+
+    //2- generar un codigo de verificacion
+
+    //3- crear el usuario y enviar por email el codigo
+
+    //4- guardar el dato en el usuario
+
+  }catch(error){
+      console.error(error);
+    res
+      .status(500)
+      .json({ mensaje: "Ocurrio un error al registrar usuarios" });
+  }
+}

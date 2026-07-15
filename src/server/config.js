@@ -9,7 +9,7 @@ export default class Server {
   // el objetivo del constructor es definir las propiedad del futuro objeto
   constructor() {
     this.app = express();
-    this.PORT = process.env.PORT || 3000;
+    this.PORT = process.env.PORT || 3002;
     this.middlewares()
   }
   // aqui agregar el resto de los metodos del futuro objeto

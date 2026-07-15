@@ -88,3 +88,38 @@ export const registrarUsuario = async (req, res) => {
     res.status(500).json({ mensaje: "Ocurrio un error al registrar usuarios" });
   }
 };
+
+export const confirmarCodigoVerificacion = async(req, res) =>{
+  try{
+    const {email, codigo} = req.body;
+    //buscar el email del usuario
+    const usuarioBuscado = await Usuario.findOne({email})
+    if(!usuarioBuscado){
+      return res.status(404).json({mensaje: 'No se encontro ningún usuario con ese email'})
+    }
+    //chequear si el estado es verificado
+    if(usuarioBuscado.verificado){
+      return res.status(400).json({mensaje: 'Esta cuenta ya esta verificada'})
+    }
+
+    //chequear que el tiempo de expiracion del codigo siga vigente
+    if(new Date() > usuarioBuscado.fechaExpiracionCodigo){
+        return res.status(400).json({mensaje: "El código esta expirado. Por favor, solicita un nuevo código."})
+    }
+
+    if(usuarioBuscado.codigoVerificacion !== codigo){
+      return res.status(400).json({mensaje: "El código de verificación es incorrecto."})
+    }
+    //aqui verificamos la cuenta del usuario
+    await Usuario.findByIdAndUpdate(usuarioBuscado._id,{
+      $set:{verificado:true},
+      $unset:{codigoVerificacion:1, fechaExpiracionCodigo:1}
+    })
+
+    res.status(200).json({mensaje: 'Cuenta verificada con exito. Ya puedes iniciar sesión.'})
+
+  }catch(error){
+    console.error(error);
+    res.status(500).json({ mensaje: "Ocurrio un error al validar el codigo de verificacion del usuario" });
+  }
+}

@@ -250,7 +250,7 @@ export const login = async (req, res) => {
     });
     res
       .status(200)
-      .json({ mensaje: "Login exitoso", nombre: usuarioBuscado.nombre });
+      .json({ mensaje: "Login exitoso", nombre: usuarioBuscado.nombreUsuario });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: "Ocurrio un error al loguear un usuario" });

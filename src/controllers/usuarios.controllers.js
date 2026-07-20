@@ -1,5 +1,6 @@
 import Usuario from "../models/usuario.js";
 import { transporter } from "../utils/mailer.js";
+import bcrypt from "bcryptjs";
 
 export const crearusuario = async (req, res) => {
   try {
@@ -185,5 +186,33 @@ await transporter.sendMail({
   }catch(error){
     console.error(error)
     res.status(500).json({mensaje: 'Ocurrio un error al crear un nuevo código de verificación'})
+  }
+}
+
+export const login = async(req, res) =>{
+  try {
+    const {email, password} = req.body;
+    //verificar si el mail es valido
+    const usuarioBuscado = await Usuario.findOne({email})
+    if(!usuarioBuscado){
+      return res.status(401).json({mensaje:'Credenciales invalidas - email'})
+    }
+    //verificar el password
+    console.log(await bcrypt.compare(password,usuarioBuscado.password ))
+    if(!await bcrypt.compare(password,usuarioBuscado.password )){
+      return res.status(401).json({mensaje:'Credenciales invalidas - password'})
+    }
+
+    //chequear que el usuario este verificado
+    if(!usuarioBuscado.verificado){
+       return res.status(403).json({mensaje:'Tu cuenta no fue verificada aún'})
+    }
+
+    //generar el token
+
+
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({mensaje: 'Ocurrio un error al loguear un usuario'})
   }
 }

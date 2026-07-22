@@ -4,6 +4,7 @@ import {
   crearusuario,
   listarUsuarios,
   login,
+  logout,
   obtenerPerfil,
   registrarUsuario,
   solicitarNuevoCodigo,
@@ -18,6 +19,7 @@ router.route("/registro").post(registrarUsuario);
 router.route("/verificar-cuenta").post(confirmarCodigoVerificacion);
 router.route("/reenviar-codigo").post(solicitarNuevoCodigo);
 router.route("/login").post(login);
+router.route("/logout").post(logout);
 
 //ruta privada
 router.route("/perfil").get(autenticador,obtenerPerfil);

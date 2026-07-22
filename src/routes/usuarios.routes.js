@@ -7,6 +7,7 @@ import {
   registrarUsuario,
   solicitarNuevoCodigo,
 } from "../controllers/usuarios.controllers.js";
+import { autenticador } from "../middlewares/authMiddlwares.js";
 
 const router = Router();
 //http://localhost:3000/api/usuarios/
@@ -16,7 +17,7 @@ router.route("/registro").post(registrarUsuario);
 router.route("/verificar-cuenta").post(confirmarCodigoVerificacion);
 router.route("/reenviar-codigo").post(solicitarNuevoCodigo);
 router.route("/login").post(login);
-router.route("/perfil").get((req, res) => {
+router.route("/perfil").get(autenticador,(req, res) => {
   res.status(200).json({ mensaje: "Bienvenido a tu perfil" });
 });
 

@@ -236,9 +236,9 @@ export const login = async (req, res) => {
     //generar el token
     const token = jwt.sign(
       { id: usuarioBuscado._id, rol: usuarioBuscado.rol },
-      process.env.JWT_SECRECT,
+      process.env.JWT_SECRET,
       {
-        expiresIn: "2h",
+        expiresIn: "1h",
       },
     );
 

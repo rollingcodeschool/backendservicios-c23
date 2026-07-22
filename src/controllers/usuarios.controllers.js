@@ -256,3 +256,8 @@ export const login = async (req, res) => {
     res.status(500).json({ mensaje: "Ocurrio un error al loguear un usuario" });
   }
 };
+
+
+export const obtenerPerfil = async(req, res) => {
+  res.status(200).json({ mensaje: "Bienvenido a tu perfil" });
+}

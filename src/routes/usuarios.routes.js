@@ -4,6 +4,7 @@ import {
   crearusuario,
   listarUsuarios,
   login,
+  obtenerPerfil,
   registrarUsuario,
   solicitarNuevoCodigo,
 } from "../controllers/usuarios.controllers.js";
@@ -17,9 +18,9 @@ router.route("/registro").post(registrarUsuario);
 router.route("/verificar-cuenta").post(confirmarCodigoVerificacion);
 router.route("/reenviar-codigo").post(solicitarNuevoCodigo);
 router.route("/login").post(login);
-router.route("/perfil").get(autenticador,(req, res) => {
-  res.status(200).json({ mensaje: "Bienvenido a tu perfil" });
-});
+
+//ruta privada
+router.route("/perfil").get(autenticador,obtenerPerfil);
 
 // router.route('/:id').get(listarUsuarios)
 

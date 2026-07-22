@@ -1,9 +1,5 @@
 import Servicio from "../models/servicio.js";
 
-export const prueba = (req, res) => {
-  res.json("hasta luego ultima prueba");
-};
-
 export const crearServicio = async (req, res) => {
   try {
     //console.log(req.body)

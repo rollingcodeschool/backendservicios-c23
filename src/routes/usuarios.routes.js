@@ -8,12 +8,12 @@ import {
   registrarUsuario,
   solicitarNuevoCodigo,
 } from "../controllers/usuarios.controllers.js";
-import { autenticador } from "../middlewares/authMiddlwares.js";
+import { autenticador, esAdmin } from "../middlewares/authMiddlwares.js";
 
 const router = Router();
 //http://localhost:3000/api/usuarios/
 
-router.route("/").post(crearusuario).get(listarUsuarios);
+router.route("/").post(crearusuario).get([autenticador, esAdmin],listarUsuarios);
 router.route("/registro").post(registrarUsuario);
 router.route("/verificar-cuenta").post(confirmarCodigoVerificacion);
 router.route("/reenviar-codigo").post(solicitarNuevoCodigo);

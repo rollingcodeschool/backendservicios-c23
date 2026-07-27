@@ -1,5 +1,7 @@
 import Categoria from "../models/categoria.js";
 
+// todo: agregar los controladores y rutas para editar, eliminar y obtener una categoria
+
 export const crearCategoria = async (req, res) => {
   try {
     //todo: agregar el middleware para validar los datos del body

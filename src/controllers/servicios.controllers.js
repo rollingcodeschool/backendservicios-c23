@@ -28,7 +28,7 @@ export const obtenerServicioPorID = async (req, res) => {
   try {
     console.log(req.params.id);
     //deberia validar que el id exista y sea un id de mongodb
-    const servicioBuscado = await Servicio.findById(req.params.id);
+    const servicioBuscado = await Servicio.findById(req.params.id).populate('categoria','nombre descripcion')
     console.log(servicioBuscado);
     if (!servicioBuscado) {
       return res

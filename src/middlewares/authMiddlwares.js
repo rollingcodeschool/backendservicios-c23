@@ -13,7 +13,6 @@ export const autenticador = (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     //guardar los datos en el request
-    console.log(decoded);
     req.user = decoded;
     next();
   } catch (error) {

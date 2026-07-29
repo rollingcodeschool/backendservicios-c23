@@ -15,15 +15,31 @@ export const crearServicio = async (req, res) => {
 
 export const listarServicios = async (req, res) => {
   try {
-    const {termino} = req.query
+    const {termino, pagina, cantServicios} = req.query
+    const paginaNumero = parseInt(pagina)
+    const limite = parseInt(cantServicios)
+    const salto = (paginaNumero - 1) * limite
+
     const query ={}
 
     if(termino){
       query.nombreServicio = { $regex: termino, $options: "i"}
     }
+    // tratemos de no usar varias consultas sueltas
+    // const servicios = await Servicio.find(query).populate('categoria','nombre descripcion')
+    // const cantidadTotal = await Servicio.countDocuments(query)
+    
+    const [servicios, cantidadTotal] = await Promise.all([
+      Servicio.find(query).populate('categoria','nombre descripcion').skip(salto).limit(limite),
+      Servicio.countDocuments(query)
+    ])
 
-    const servicios = await Servicio.find(query).populate('categoria','nombre descripcion')
-    res.status(200).json(servicios);
+    res.status(200).json({
+      servicios,
+      cantidadTotal,
+      paginaActual: paginaNumero,
+      totalPaginas: Math.ceil(cantidadTotal / limite)
+    });
   } catch (error) {
     console.error(error);
     res

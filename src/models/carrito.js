@@ -10,6 +10,7 @@ const carritoSchema = new Schema(
     },
     items: [
       {
+        //_id:false
         servicio: {
           type: Schema.Types.ObjectId,
           ref: "servicio",

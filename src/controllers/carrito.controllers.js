@@ -1,5 +1,6 @@
 import Servicio from "../models/servicio.js";
 import buscarOCrearCarrito from "../utils/buscarCarrito.js";
+
 export const agregarAlCarrito = async (req, res) => {
   try {
     const { servicio, cantidad } = req.body;
@@ -13,6 +14,7 @@ export const agregarAlCarrito = async (req, res) => {
     }
     //buscar o crear el carrito
     const carrito = await buscarOCrearCarrito(userId)
+
     const itemIndex = carrito.items.findIndex((item)=> item.servicio.toString() === servicio)
     //tengo este servicio en el carrito
     if(itemIndex > -1){
@@ -40,3 +42,16 @@ export const agregarAlCarrito = async (req, res) => {
       .json({ mensaje: "Ocurrio un error al agregar un elemento al carrito" });
   }
 };
+
+export const obtenerCarrito = async(req,res) =>{
+  try{
+    const userId = req.user.id
+    const carrito = await buscarOCrearCarrito(userId)
+
+    await carrito.populate('items.servicio', 'nombreServicio precio imagen')
+
+    res.status(200).json(carrito)
+  }catch(error){
+    console.error(error)
+  }
+}

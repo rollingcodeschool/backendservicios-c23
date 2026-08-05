@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   agregarAlCarrito,
   obtenerCarrito,
+  restarCantidad,
   vaciarCarrito,
 } from "../controllers/carrito.controllers.js";
 import { autenticador } from "../middlewares/authMiddlwares.js";
@@ -14,4 +15,5 @@ router
   .get(autenticador, obtenerCarrito)
   .delete(autenticador, vaciarCarrito);
 
+router.route('/restar/:servicioId').patch(autenticador,restarCantidad)  
 export default router;

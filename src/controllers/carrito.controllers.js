@@ -13,28 +13,30 @@ export const agregarAlCarrito = async (req, res) => {
         .json({ mensaje: "El servicio solicitado no existe" });
     }
     //buscar o crear el carrito
-    const carrito = await buscarOCrearCarrito(userId)
+    const carrito = await buscarOCrearCarrito(userId);
 
-    const itemIndex = carrito.items.findIndex((item)=> item.servicio.toString() === servicio)
+    const itemIndex = carrito.items.findIndex(
+      (item) => item.servicio.toString() === servicio,
+    );
     //tengo este servicio en el carrito
-    if(itemIndex > -1){
-        carrito.items[itemIndex].cantidad += parseInt(cantidad)
-    }else{
-        //agregar el servicio al carrito
-        carrito.items.push({
-            servicio,
-            cantidad
-        })
+    if (itemIndex > -1) {
+      carrito.items[itemIndex].cantidad += parseInt(cantidad);
+    } else {
+      //agregar el servicio al carrito
+      carrito.items.push({
+        servicio,
+        cantidad,
+      });
     }
-    console.log(carrito.items)
-    await carrito.save() 
+    console.log(carrito.items);
+    await carrito.save();
     //agregar el nombre del servicio al carrito
-    await carrito.populate('items.servicio', 'nombreServicio precio')
+    await carrito.populate("items.servicio", "nombreServicio precio");
 
     res.status(201).json({
-        mensaje: 'Servicio agregado al carrito correctamente',
-        carrito
-    })
+      mensaje: "Servicio agregado al carrito correctamente",
+      carrito,
+    });
   } catch (error) {
     console.error(error);
     res
@@ -43,15 +45,35 @@ export const agregarAlCarrito = async (req, res) => {
   }
 };
 
-export const obtenerCarrito = async(req,res) =>{
-  try{
-    const userId = req.user.id
-    const carrito = await buscarOCrearCarrito(userId)
+export const obtenerCarrito = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const carrito = await buscarOCrearCarrito(userId);
 
-    await carrito.populate('items.servicio', 'nombreServicio precio imagen')
+    await carrito.populate("items.servicio", "nombreServicio precio imagen");
 
-    res.status(200).json(carrito)
-  }catch(error){
-    console.error(error)
+    res.status(200).json(carrito);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: "Ocurrio un error al obtener el carrito" });
   }
-}
+};
+
+export const vaciarCarrito = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const carrito = await buscarOCrearCarrito(userId);
+    //limiar el array de items
+    carrito.items = [];
+
+    await carrito.save();
+    res
+      .status(200)
+      .json({ mensaje: "El carrito fue vaciado correctamente", carrito });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ mensaje: "Ocurrio un error al intentar vaciar el carrito" });
+  }
+};

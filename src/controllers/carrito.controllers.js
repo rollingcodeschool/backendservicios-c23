@@ -110,3 +110,33 @@ export const restarCantidad = async(req, res)=>{
       .json({ mensaje: "Ocurrio un error al intentar restar la cantidad de un servicio" });
   }
 }
+
+export const eliminarServicio = async (req, res) => {
+  try {
+    const { servicioId } = req.params;
+    const userId = req.user.id;
+    console.log(req.user.id);
+    console.log(userId);
+
+    const carrito = await buscarOCrearCarrito(userId);
+    //borrar el servicio del array
+  
+    carrito.items = carrito.items.filter(
+      (item) => item.servicio.toString() !== servicioId,
+    );
+
+    //guardar los cambios en la Base de datos
+    await carrito.save();
+
+    await carrito.populate("items.servicio", "nombreServicio precio imagen");
+    res.status(200).json({
+      mensaje: "El servicio fue eliminado del carrito",
+      carrito,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      mensaje: "Ocurrio un error al intentar eliminar un servicio del carrito",
+    });
+  }
+};

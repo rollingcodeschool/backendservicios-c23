@@ -1,10 +1,39 @@
 import Servicio from "../models/servicio.js";
+import subirImagenACloudinary from "../utils/cloudinaryUploader.js";
+
+// export const crearServicio = async (req, res) => {
+//   try {
+//     //console.log(req.body)
+//     const servicioNuevo = new Servicio(req.body);
+//     //aqui quiero guardar en la BD
+//     await servicioNuevo.save();
+//     res.status(201).json({ mensaje: "El servicio fue creado correctamente" });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ mensaje: "Ocurrio un error al crear el servicio" });
+//   }
+// };
 
 export const crearServicio = async (req, res) => {
   try {
-    //console.log(req.body)
-    const servicioNuevo = new Servicio(req.body);
-    //aqui quiero guardar en la BD
+    let imagenUrl = "";
+    // 1. Si enviaron una imagen por Multer, la subimos a Cloudinary
+    if (req.file) {
+      const resultado = await subirImagenACloudinary(req.file.buffer);
+      console.log(resultado);
+      imagenUrl = resultado.secure_url;
+    } else {
+      // Imagen por defecto si es opcional en la creación
+      imagenUrl =
+        "https://images.pexels.com/photos/5652023/pexels-photo-5652023.jpeg";
+    }
+    // 2. Asignamos la URL obtenida al objeto req.body
+    const nuevoServicioData = {
+      ...req.body,
+      imagen: imagenUrl,
+    };
+    // 3. Guardamos en MongoDB
+    const servicioNuevo = new Servicio(nuevoServicioData);
     await servicioNuevo.save();
     res.status(201).json({ mensaje: "El servicio fue creado correctamente" });
   } catch (error) {
@@ -87,38 +116,40 @@ export const borrarServicioPorID = async (req, res) => {
       .json({ mensaje: "El servicio fue eliminado correctamente" });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({
-        mensaje: "Ocurrio un error al intentar borrar un servicio por id",
-      });
+    res.status(500).json({
+      mensaje: "Ocurrio un error al intentar borrar un servicio por id",
+    });
   }
 };
 export const editarServicioPorID = async (req, res) => {
   try {
-    //deberia validar que el id exista y sea un id de mongodb
-    const servicioActualizado = await Servicio.findByIdAndUpdate(
+    //1. Preparamos los datos a actualizar copiando el body recibido
+    const datosActualizados = { ...req.body };
+    //2. Si el usuario subió una NUEVA imagen, la subimos a Cloudinary y reemplazamos la URL
+    if (req.file) {
+      const resultado = await subirImagenACloudinary(req.file.buffer);
+      datosActualizados.imagen = resultado.secure_url;
+    }
+    //3. Actualizamos el documento y retornamos el nuevo estado ({ new: true })
+    const servicioEditado = await Servicio.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      datosActualizados,
       { new: true },
     );
-    if (!servicioActualizado) {
+
+    if (!servicioEditado) {
       return res
         .status(404)
         .json({ mensaje: "No se encontro un servicio con el id enviado" });
     }
-    res
-      .status(200)
-      .json({
-        mensaje: "El servicio fue editado correctamente",
-        servicio: servicioActualizado,
-      });
+    res.status(200).json({
+      mensaje: "El servicio se actualizo correctamente",
+      servicio: servicioEditado,
+    });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({
-        mensaje: "Ocurrio un error al intentar editar un servicio por id",
-      });
+    res.status(500).json({
+      mensaje: "Ocurrio un error al intentar editar un servicio por id",
+    });
   }
 };

@@ -29,20 +29,20 @@ const reglasServicio = [
     .withMessage("El precio debe ser un valor numerico")
     .isFloat({ min: 50 })
     .withMessage("El precio debe ser desde $50"),
-  body("categoria")
-    .isString()
-    .withMessage("La categoria debe ser un string")
-    .isIn(["Desarrollo Web", "Backend & API", "Consultoría"])
-    .withMessage(
-      "La categoria debe ser algunos de los siguientes valores: 'Desarrollo Web', 'Backend & API', 'Consultoría'",
-    ),
-  body("imagen")
-    .isString()
-    .withMessage("La imagen debe ser un string")
-    .matches(/^https:\/\/.+\.(jpg|jpeg|png|webp|avif|svg)$/)
-    .withMessage(
-      "La imagen debe ser una url valida terminada en jpg|jpeg|png|webp|avif|svg",
-    ),
+  // body("categoria")
+  //   .isString()
+  //   .withMessage("La categoria debe ser un string")
+  //   .isIn(["Desarrollo Web", "Backend & API", "Consultoría"])
+  //   .withMessage(
+  //     "La categoria debe ser algunos de los siguientes valores: 'Desarrollo Web', 'Backend & API', 'Consultoría'",
+  //   ),
+  // body("imagen")
+  //   .isString()
+  //   .withMessage("La imagen debe ser un string")
+  //   .matches(/^https:\/\/.+\.(jpg|jpeg|png|webp|avif|svg)$/)
+  //   .withMessage(
+  //     "La imagen debe ser una url valida terminada en jpg|jpeg|png|webp|avif|svg",
+  //   ),
   body("descripcion")
     .isString()
     .withMessage("La descripción debe ser un string")

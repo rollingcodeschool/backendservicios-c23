@@ -25,9 +25,9 @@ const ServicioSchema = new Schema(
            } 
         },
         categoria:{
-            type: String,
-            required: true,
-            enum: ['Desarrollo Web', 'Backend & API', 'Consultoría']
+            type: Schema.Types.ObjectId,
+            ref: 'categoria',
+            required:true 
         },
         descripcion:{
             type: String,

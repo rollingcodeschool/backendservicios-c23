@@ -1,15 +1,29 @@
 import { Router } from "express";
-import { confirmarCodigoVerificacion, crearusuario, listarUsuarios, registrarUsuario, solicitarNuevoCodigo } from "../controllers/usuarios.controllers.js";
+import {
+  confirmarCodigoVerificacion,
+  crearusuario,
+  listarUsuarios,
+  login,
+  logout,
+  obtenerPerfil,
+  registrarUsuario,
+  solicitarNuevoCodigo,
+} from "../controllers/usuarios.controllers.js";
+import { autenticador, esAdmin } from "../middlewares/authMiddlwares.js";
 
-
-const router = Router()
+const router = Router();
 //http://localhost:3000/api/usuarios/
 
-router.route('/').post(crearusuario).get(listarUsuarios)
-router.route('/registro').post(registrarUsuario)
-router.route('/verificar-cuenta').post(confirmarCodigoVerificacion)
-router.route('/reenviar-codigo').post(solicitarNuevoCodigo)
+router.route("/").post(crearusuario).get([autenticador, esAdmin],listarUsuarios);
+router.route("/registro").post(registrarUsuario);
+router.route("/verificar-cuenta").post(confirmarCodigoVerificacion);
+router.route("/reenviar-codigo").post(solicitarNuevoCodigo);
+router.route("/login").post(login);
+router.route("/logout").post(logout);
+
+//ruta privada
+router.route("/perfil").get(autenticador,obtenerPerfil);
 
 // router.route('/:id').get(listarUsuarios)
 
-export default router
+export default router;
